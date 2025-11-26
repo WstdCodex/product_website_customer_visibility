@@ -54,6 +54,7 @@ class ProductVisibilityCon(WebsiteSale):
             return 'product_brand_id'
         return None
 
+
     def sitemap_shop(env, rule, qs):
         if not qs or qs.lower() in '/shop':
             yield {'loc': '/shop'}
@@ -142,6 +143,8 @@ class ProductVisibilityCon(WebsiteSale):
         brand_field = self._brand_field_name()
         if available_brands and brand_field:
             domain = expression.AND([domain, [(brand_field, 'not in', available_brands.ids)]])
+        if available_brands:
+            domain = expression.AND([domain, [('brand_id', 'not in', available_brands.ids)]])
         Product = request.env['product.template'].with_context(bin_size=True)
         keep = QueryURL('/shop', category=category and int(category), search=search, attrib=attrib_list,
                         order=post.get('order'))
