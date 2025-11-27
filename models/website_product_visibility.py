@@ -52,9 +52,9 @@ class ProductVisibility(models.Model):
     @api.onchange("filter_mode")
     def onchange_filter_mod(self):
         if self.filter_mode == 'null':
-            self.website_available_cat_ids = None
-            self.website_available_product_ids = None
-            self.website_available_brand_ids = None
+            self.website_available_cat_ids = [(5, 0, 0)]
+            self.website_available_product_ids = [(5, 0, 0)]
+            self.website_available_brand_ids = [(5, 0, 0)]
 
 class WebsiteGuestVisibility(models.TransientModel):
     _inherit = 'res.config.settings'
@@ -89,25 +89,25 @@ class WebsiteGuestVisibility(models.TransientModel):
                                                          self.product_visibility_guest_user)
         self.env['ir.config_parameter'].sudo().set_param('filter_mode', self.filter_mode)
         if not self.product_visibility_guest_user:
-            self.available_cat_ids = None
-            self.available_product_ids = None
-            self.available_brand_ids = None
+            self.available_cat_ids = [(5, 0, 0)]
+            self.available_product_ids = [(5, 0, 0)]
+            self.available_brand_ids = [(5, 0, 0)]
             self.env['ir.config_parameter'].sudo().set_param('filter_mode', 'product_only')
         if self.filter_mode == 'product_only':
-            self.available_cat_ids = None
-            self.available_brand_ids = None
+            self.available_cat_ids = [(5, 0, 0)]
+            self.available_brand_ids = [(5, 0, 0)]
         elif self.filter_mode == 'categ_only':
-            self.available_product_ids = None
-            self.available_brand_ids = None
+            self.available_product_ids = [(5, 0, 0)]
+            self.available_brand_ids = [(5, 0, 0)]
         elif self.filter_mode == 'brand_only':
-            self.available_cat_ids = None
-            self.available_product_ids = None
+            self.available_cat_ids = [(5, 0, 0)]
+            self.available_product_ids = [(5, 0, 0)]
         elif self.filter_mode == 'product_and_categ':
-            self.available_brand_ids = None
+            self.available_brand_ids = [(5, 0, 0)]
         elif self.filter_mode == 'product_and_brand':
-            self.available_cat_ids = None
+            self.available_cat_ids = [(5, 0, 0)]
         elif self.filter_mode == 'categ_and_brand':
-            self.available_product_ids = None
+            self.available_product_ids = [(5, 0, 0)]
 
         self.env['ir.config_parameter'].sudo().set_param('website_product_visibility.available_product_ids',
                                                          self.available_product_ids.ids)
@@ -121,11 +121,11 @@ class WebsiteGuestVisibility(models.TransientModel):
     def get_values(self):
         res = super(WebsiteGuestVisibility, self).get_values()
         product_ids = literal_eval(self.env['ir.config_parameter'].sudo()
-                                   .get_param('website_product_visibility.available_product_ids', 'False'))
+                                   .get_param('website_product_visibility.available_product_ids', '[]'))
         cat_ids = literal_eval(self.env['ir.config_parameter'].sudo()
-                               .get_param('website_product_visibility.available_cat_ids', 'False'))
+                               .get_param('website_product_visibility.available_cat_ids', '[]'))
         brand_ids = literal_eval(self.env['ir.config_parameter'].sudo()
-                                 .get_param('website_product_visibility.available_brand_ids', 'False'))
+                                 .get_param('website_product_visibility.available_brand_ids', '[]'))
         mod = self.env['ir.config_parameter'].sudo().get_param('filter_mode')
         if self.env['ir.config_parameter'].sudo().get_param('filter_mode'):
 
